@@ -41,6 +41,8 @@ dependencies:
   http:
   shared_preferences:
   geolocator:
+  geocoding:
+  google_fonts:
 
 dev_dependencies:
   flutter_test:

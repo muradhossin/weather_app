@@ -13,7 +13,7 @@ class ForecastWeatherResponse {
     if (json['list'] != null) {
       list = [];
       json['list'].forEach((v) {
-        list?.add(ForecastList.fromJson(v));
+        list?.add(ForecastItem.fromJson(v));
       });
     }
     city = json['city'] != null ? City.fromJson(json['city']) : null;
@@ -21,12 +21,12 @@ class ForecastWeatherResponse {
   String? cod;
   num? message;
   num? cnt;
-  List<ForecastList>? list;
+  List<ForecastItem>? list;
   City? city;
 ForecastWeatherResponse copyWith({  String? cod,
   num? message,
   num? cnt,
-  List<ForecastList>? list,
+  List<ForecastItem>? list,
   City? city,
 }) => ForecastWeatherResponse(  cod: cod ?? this.cod,
   message: message ?? this.message,
@@ -138,8 +138,8 @@ Coord copyWith({  num? lat,
 
 }
 
-class ForecastList {
-  ForecastList({
+class ForecastItem {
+  ForecastItem({
       this.dt,
       this.main,
       this.weather,
@@ -150,7 +150,7 @@ class ForecastList {
       this.sys,
       this.dtTxt,});
 
-  ForecastList.fromJson(dynamic json) {
+  ForecastItem.fromJson(dynamic json) {
     dt = json['dt'];
     main = json['main'] != null ? Main.fromJson(json['main']) : null;
     if (json['weather'] != null) {
@@ -175,7 +175,7 @@ class ForecastList {
   num? pop;
   Sys? sys;
   String? dtTxt;
-ForecastList copyWith({  num? dt,
+ForecastItem copyWith({  num? dt,
   Main? main,
   List<Weather>? weather,
   Clouds? clouds,
@@ -184,7 +184,7 @@ ForecastList copyWith({  num? dt,
   num? pop,
   Sys? sys,
   String? dtTxt,
-}) => ForecastList(  dt: dt ?? this.dt,
+}) => ForecastItem(  dt: dt ?? this.dt,
   main: main ?? this.main,
   weather: weather ?? this.weather,
   clouds: clouds ?? this.clouds,
