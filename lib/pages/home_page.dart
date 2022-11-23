@@ -14,24 +14,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late WeatherProvider weatherProvider;
   bool isCalledOnce = true;
-  bool isLoading = true;
 
   @override
   void didChangeDependencies() {
     if (isCalledOnce) {
       weatherProvider = Provider.of<WeatherProvider>(context, listen: true);
-      _determinePosition().then((position) {
-        weatherProvider.getCurrentWeatherDate(position).then((value) {
-          setState(() {
-            isLoading = false;
-          });
-        });
-        print(
-            'Latitude: ${position.latitude} Longatude: ${position.longitude}');
-      });
+      _getData();
     }
     isCalledOnce = false;
     super.didChangeDependencies();
+  }
+
+  void _getData() {
+    _determinePosition().then((position) {
+      weatherProvider.setNewPosition(position.latitude, position.longitude);
+      weatherProvider.getData();
+    });
   }
 
   @override
@@ -40,16 +38,13 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Weather app'),
       ),
-      body: ListView(
+      body: weatherProvider.hasDataLoaded ? ListView(
         children: [
-          isLoading? Center(
-            child: CircularProgressIndicator(),
-          ):Text(
-            '${weatherProvider.currentWeatherResponse.main!.temp}',
-            style: TextStyle(fontSize: 30),
-          ),
+          
         ],
-      ),
+      ) : const Center(
+        child: CircularProgressIndicator(),
+      )
     );
   }
 
