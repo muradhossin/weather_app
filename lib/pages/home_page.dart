@@ -47,6 +47,7 @@ class _HomePageState extends State<HomePage> {
             ? ListView(
                 children: [
                   _currentWeatherSection(),
+                  _forecastWeatherSection(),
                 ],
               )
             : const Center(
@@ -85,51 +86,95 @@ class _HomePageState extends State<HomePage> {
         Wrap(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
                 'Humidity ${current.main!.humidity}%',
                 style: txtTempNormal18,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
                 'Pressure ${current.main!.pressure}hPa%',
                 style: txtTempNormal18,
               ),
-
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
                 'Visibility ${current.visibility} meter',
                 style: txtTempNormal18,
               ),
-
             ),
           ],
         ),
         Wrap(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
-                'Sunrise ${getFormattedDate(current.sys!.sunrise!,pattern: 'hh:mm a')}',
+                'Sunrise ${getFormattedDate(current.sys!.sunrise!, pattern: 'hh:mm a')}',
                 style: txtAddress20,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(
-                'Sunset ${getFormattedDate(current.sys!.sunset!,pattern: 'hh:mm a')}',
+                'Sunset ${getFormattedDate(current.sys!.sunset!, pattern: 'hh:mm a')}',
                 style: txtAddress20,
               ),
-
             ),
           ],
         ),
-
       ],
+    );
+  }
+
+  Widget _forecastWeatherSection() {
+    final itemList = weatherProvider.forecastWeatherResponse!.list!;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: itemList
+            .map((item) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+              child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          getFormattedDate(item.dt!, pattern: 'EEE, HH:mm'),
+                          style: txtDate16,
+                        ),
+                      ),
+                      Expanded(
+                        child: Image.network(
+                          "$iconPrefix${item.weather![0].icon}$iconSuffix",
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          '${item.main!.tempMax!.round()}/${item.main!.tempMin!.round()}$degree${weatherProvider.tempUnitSymbol}',
+                          style: txtDate16,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          item.weather![0].description!,
+                          style: txtDate16,
+                        ),
+                      ),
+                    ],
+                  ),
+            ))
+            .toList(),
+      ),
     );
   }
 }
