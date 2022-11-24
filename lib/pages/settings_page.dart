@@ -21,6 +21,9 @@ class _SettingsPageState extends State<SettingsPage> {
         tempUnitStatus = value;
       });
     });
+    getBool(prefTimeFormat).then((value) {
+      is24Hours = value;
+    });
     super.initState();
   }
   @override

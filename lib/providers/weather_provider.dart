@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather/models/current_weather_response.dart';
 import 'package:weather/models/forecast_weather_response.dart';
@@ -65,6 +66,22 @@ class WeatherProvider extends ChangeNotifier{
         notifyListeners();
       }else{
         print(map['message']);
+      }
+    }catch(error){
+      print(error.toString());
+    }
+  }
+
+  Future<void> convertAddressToLocation(String address) async{
+    try{
+      final locationList = await locationFromAddress(address);
+      if(locationList.isNotEmpty){
+        final location = locationList.first;
+        latitude = location.latitude;
+        longitude = location.longitude;
+        getData();
+      }else{
+        print('No location found from your provided address');
       }
     }catch(error){
       print(error.toString());

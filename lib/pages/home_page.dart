@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
     super.didChangeDependencies();
   }
 
-  void _getData() async{
+  void _getData() async {
     final position = await _determinePosition();
     weatherProvider.setNewPosition(position.latitude, position.longitude);
     final unitStatus = await getBool(prefUnit);
@@ -48,19 +48,28 @@ class _HomePageState extends State<HomePage> {
           title: const Text('Weather app'),
           actions: [
             IconButton(
-              onPressed: (){
-                Navigator.pushNamed(context, SettingsPage.routeName);
+              onPressed: () {
+                _getData();
               },
               icon: const Icon(Icons.my_location),
             ),
             IconButton(
-              onPressed: (){
-                Navigator.pushNamed(context, SettingsPage.routeName);
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: _CitySearchDelegate(),
+                ).then(
+                  (city) {
+                    if(city != null && city.isNotEmpty){
+                      weatherProvider.convertAddressToLocation(city);
+                    }
+                  },
+                );
               },
               icon: const Icon(Icons.search),
             ),
             IconButton(
-              onPressed: (){
+              onPressed: () {
                 Navigator.pushNamed(context, SettingsPage.routeName);
               },
               icon: const Icon(Icons.settings),
@@ -75,7 +84,9 @@ class _HomePageState extends State<HomePage> {
                 ],
               )
             : const Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               ));
   }
 
@@ -175,7 +186,8 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         child: Text(
-                          getFormattedDate(item.dt!, pattern: 'EEE, ${weatherProvider.timeFormat}'),
+                          getFormattedDate(item.dt!,
+                              pattern: 'EEE, ${weatherProvider.timeFormat}'),
                           style: txtDate16,
                         ),
                       ),
@@ -242,4 +254,58 @@ Future<Position> _determinePosition() async {
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
   return await Geolocator.getCurrentPosition();
+}
+
+class _CitySearchDelegate extends SearchDelegate<String> {
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = '';
+        },
+        icon: const Icon(Icons.clear),
+      ),
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        close(context, "");
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        close(context, query);
+      },
+      title: Text(query),
+      leading: const Icon(Icons.search),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final filteredList = query.isEmpty
+        ? cities
+        : cities
+            .where((city) => city.toLowerCase().startsWith(query.toLowerCase()))
+            .toList();
+    return ListView.builder(
+      itemCount: filteredList.length,
+      itemBuilder: (context, index) => ListTile(
+        onTap: () {
+          query = filteredList[index];
+          close(context, query);
+        },
+        title: Text(filteredList[index]),
+      ),
+    );
+  }
 }

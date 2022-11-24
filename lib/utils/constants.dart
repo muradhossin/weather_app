@@ -8,3 +8,31 @@ const String iconPrefix = 'https://openweathermap.org/img/wn/';
 const String iconSuffix = '@2x.png';
 const String timePattern24h = 'hh:mm a';
 const String timePattern12h = 'HH:mm';
+
+const cities = [
+  'Athens',
+  'Barishal',
+  'Bangalore',
+  'Berlin',
+  'Capetown',
+  'Dhaka',
+  'Dublin',
+  'Dubai',
+  'Faridpur',
+  'Gopalgonj',
+  'Hobigonj',
+  'Istanbul',
+  'Jakarta',
+  'Jamalpur',
+  'Keranigonj',
+  'Kualalampur',
+  'London',
+  'Milan',
+  'New York',
+  'Oslo',
+  'Paris',
+  'Riadh',
+  'Rome',
+  'Sydney',
+  'Tongi',
+];
