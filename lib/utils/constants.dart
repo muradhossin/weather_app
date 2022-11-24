@@ -6,3 +6,5 @@ const String fahrenheit = 'F';
 const String degree = '\u00B0';
 const String iconPrefix = 'https://openweathermap.org/img/wn/';
 const String iconSuffix = '@2x.png';
+const String timePattern24h = 'hh:mm a';
+const String timePattern12h = 'HH:mm';

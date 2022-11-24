@@ -6,6 +6,7 @@ import 'package:weather/providers/weather_provider.dart';
 import 'package:weather/utils/constants.dart';
 import 'package:weather/utils/helper_functions.dart';
 import 'package:weather/utils/textstyles.dart';
+import 'package:weather/utils/weather_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,11 +30,13 @@ class _HomePageState extends State<HomePage> {
     super.didChangeDependencies();
   }
 
-  void _getData() {
-    _determinePosition().then((position) {
-      weatherProvider.setNewPosition(position.latitude, position.longitude);
-      weatherProvider.getData();
-    });
+  void _getData() async{
+    final position = await _determinePosition();
+    weatherProvider.setNewPosition(position.latitude, position.longitude);
+    final unitStatus = await getBool(prefUnit);
+    final timeStatus = await getBool(prefTimeFormat);
+    weatherProvider.setTempUint(unitStatus);
+    weatherProvider.setTimeFormat(timeStatus);
   }
 
   @override
@@ -140,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 child: Text(
-                  'Sunrise ${getFormattedDate(current.sys!.sunrise!, pattern: 'hh:mm a')}',
+                  'Sunrise ${getFormattedDate(current.sys!.sunrise!, pattern: '${weatherProvider.timeFormat}')}',
                   style: txtAddress20,
                 ),
               ),
@@ -148,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                 child: Text(
-                  'Sunset ${getFormattedDate(current.sys!.sunset!, pattern: 'hh:mm a')}',
+                  'Sunset ${getFormattedDate(current.sys!.sunset!, pattern: '${weatherProvider.timeFormat}')}',
                   style: txtAddress20,
                 ),
               ),
@@ -172,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         child: Text(
-                          getFormattedDate(item.dt!, pattern: 'EEE, HH:mm'),
+                          getFormattedDate(item.dt!, pattern: 'EEE, ${weatherProvider.timeFormat}'),
                           style: txtDate16,
                         ),
                       ),

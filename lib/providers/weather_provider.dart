@@ -14,10 +14,23 @@ class WeatherProvider extends ChangeNotifier{
   double longitude = 0.0;
   String tempUnit = metric;
   String tempUnitSymbol = celsius;
+  String timeFormat = timePattern24h;
+
 
   void setNewPosition(double lat, double lng){
     latitude = lat;
     longitude = lng;
+  }
+
+  void setTempUint(bool status){
+    tempUnit = status ? imperial : metric;
+    tempUnitSymbol = status ? fahrenheit : celsius;
+    getData();
+  }
+
+  void setTimeFormat(bool status){
+    timeFormat = status ? timePattern12h : timePattern24h;
+    getData();
   }
 
   bool get hasDataLoaded => currentWeatherResponse != null && forecastWeatherResponse != null;
