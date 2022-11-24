@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
+import 'package:weather/pages/settings_page.dart';
 import 'package:weather/providers/weather_provider.dart';
 import 'package:weather/utils/constants.dart';
 import 'package:weather/utils/helper_functions.dart';
@@ -42,6 +43,26 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           elevation: 0,
           title: const Text('Weather app'),
+          actions: [
+            IconButton(
+              onPressed: (){
+                Navigator.pushNamed(context, SettingsPage.routeName);
+              },
+              icon: const Icon(Icons.my_location),
+            ),
+            IconButton(
+              onPressed: (){
+                Navigator.pushNamed(context, SettingsPage.routeName);
+              },
+              icon: const Icon(Icons.search),
+            ),
+            IconButton(
+              onPressed: (){
+                Navigator.pushNamed(context, SettingsPage.routeName);
+              },
+              icon: const Icon(Icons.settings),
+            ),
+          ],
         ),
         body: weatherProvider.hasDataLoaded
             ? ListView(
@@ -57,81 +78,84 @@ class _HomePageState extends State<HomePage> {
 
   Widget _currentWeatherSection() {
     final current = weatherProvider.currentWeatherResponse;
-    return Column(
-      children: [
-        Text(
-          getFormattedDate(
-            current!.dt!,
-            pattern: 'EEE dd, yyyy',
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Text(
+            getFormattedDate(
+              current!.dt!,
+              pattern: 'EEE dd, yyyy',
+            ),
+            style: txtDate16,
           ),
-          style: txtDate16,
-        ),
-        Text(
-          '${current.name}, ${current.sys!.country}',
-          style: txtAddress20,
-        ),
-        Text(
-          '${current.main!.temp!.round()}$degree${weatherProvider.tempUnitSymbol}',
-          style: txtTempBig80,
-        ),
-        Text(
-          'Feels like ${current.main!.feelsLike!.round()}$degree${weatherProvider.tempUnitSymbol}',
-          style: txtTempNormal18,
-        ),
-        Image.network("$iconPrefix${current.weather![0].icon}$iconSuffix"),
-        Text(
-          current.weather![0].description!,
-          style: txtAddress20,
-        ),
-        Wrap(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Text(
-                'Humidity ${current.main!.humidity}%',
-                style: txtTempNormal18,
+          Text(
+            '${current.name}, ${current.sys!.country}',
+            style: txtAddress20,
+          ),
+          Text(
+            '${current.main!.temp!.round()}$degree${weatherProvider.tempUnitSymbol}',
+            style: txtTempBig80,
+          ),
+          Text(
+            'Feels like ${current.main!.feelsLike!.round()}$degree${weatherProvider.tempUnitSymbol}',
+            style: txtTempNormal18,
+          ),
+          Image.network("$iconPrefix${current.weather![0].icon}$iconSuffix"),
+          Text(
+            current.weather![0].description!,
+            style: txtAddress20,
+          ),
+          Wrap(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: Text(
+                  'Humidity ${current.main!.humidity}%',
+                  style: txtTempNormal18,
+                ),
               ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Text(
-                'Pressure ${current.main!.pressure}hPa%',
-                style: txtTempNormal18,
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: Text(
+                  'Pressure ${current.main!.pressure}hPa%',
+                  style: txtTempNormal18,
+                ),
               ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Text(
-                'Visibility ${current.visibility} meter',
-                style: txtTempNormal18,
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: Text(
+                  'Visibility ${current.visibility} meter',
+                  style: txtTempNormal18,
+                ),
               ),
-            ),
-          ],
-        ),
-        Wrap(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Text(
-                'Sunrise ${getFormattedDate(current.sys!.sunrise!, pattern: 'hh:mm a')}',
-                style: txtAddress20,
+            ],
+          ),
+          Wrap(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: Text(
+                  'Sunrise ${getFormattedDate(current.sys!.sunrise!, pattern: 'hh:mm a')}',
+                  style: txtAddress20,
+                ),
               ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              child: Text(
-                'Sunset ${getFormattedDate(current.sys!.sunset!, pattern: 'hh:mm a')}',
-                style: txtAddress20,
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: Text(
+                  'Sunset ${getFormattedDate(current.sys!.sunset!, pattern: 'hh:mm a')}',
+                  style: txtAddress20,
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -142,8 +166,9 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: itemList
             .map((item) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-              child: Row(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 4.0, horizontal: 8.0),
+                  child: Row(
                     children: [
                       Expanded(
                         child: Text(
@@ -172,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-            ))
+                ))
             .toList(),
       ),
     );
