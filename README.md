@@ -28,7 +28,7 @@ the current location and forecast weather. Also, have city Search functionality.
 Clone the repository
 
 ```bash
-  git clone https://github.com/muradhossin/weather_app
+  git clone https://github.com/muradhossin/weather_app.git
 ```
 Move to the desired folder
 
